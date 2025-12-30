@@ -1,12 +1,14 @@
 import type { Chess } from "chess.js"
+import { getPieceComponent } from "./Pieces"
 
 interface GameInfoProps {
   game: Chess
   moveHistory: string[]
   currentPlayer: string
+  theme: "classic" | "glass" | "modern"
 }
 
-export default function GameInfo({ game, moveHistory, currentPlayer }: GameInfoProps) {
+export default function GameInfo({ game, moveHistory, currentPlayer, theme }: GameInfoProps) {
   const getGameStatus = () => {
     if (game.isCheckmate()) {
       return `Checkmate! ${currentPlayer === "White" ? "Black" : "White"} wins!`
@@ -64,32 +66,27 @@ export default function GameInfo({ game, moveHistory, currentPlayer }: GameInfoP
 
   const capturedPieces = getCapturedPieces()
 
-  const getPieceSymbol = (piece: string): string => {
-    const symbols: { [key: string]: string } = {
-      p: "♟",
-      r: "♜",
-      n: "♞",
-      b: "♝",
-      q: "♛",
-      k: "♚",
-    }
-    return symbols[piece] || ""
-  }
+  const cardStyle = theme === 'glass'
+    ? "bg-white/10 backdrop-blur-md border border-white/20 text-white"
+    : "bg-white shadow-lg text-gray-800"
+
+  const subCardStyle = theme === 'glass'
+    ? "bg-black/20 text-white"
+    : "bg-gray-50 text-gray-800"
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <div className={`rounded-xl p-6 w-full max-w-md transition-all duration-300 ${cardStyle}`}>
       <h2 className="text-2xl font-bold mb-4 text-center">Game Info</h2>
 
       <div className="mb-6">
         <div className="text-lg font-semibold mb-2">Status:</div>
         <div
-          className={`text-lg p-3 rounded ${
-            game.isGameOver()
-              ? "bg-red-100 text-red-800"
+          className={`text-lg p-3 rounded-lg font-medium text-center ${game.isGameOver()
+              ? "bg-red-500/20 text-red-500 border border-red-500/30"
               : game.isCheck()
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-green-100 text-green-800"
-          }`}
+                ? "bg-yellow-500/20 text-yellow-500 border border-yellow-500/30"
+                : "bg-green-500/20 text-green-500 border border-green-500/30"
+            }`}
         >
           {getGameStatus()}
         </div>
@@ -98,46 +95,48 @@ export default function GameInfo({ game, moveHistory, currentPlayer }: GameInfoP
       {/* Captured Pieces Section */}
       <div className="mb-4">
         <div className="text-lg font-semibold mb-2">Captured Pieces:</div>
-        <div className="bg-gray-50 rounded p-3">
-          <div className="mb-2">
-            <span className="font-medium text-sm">White captured: </span>
-            {capturedPieces.white.length > 0 ? (
-              <span className="text-2xl">
-                {capturedPieces.white.map((piece, index) => (
-                  <span key={index}>{getPieceSymbol(piece)}</span>
-                ))}
-              </span>
-            ) : (
-              <span className="text-gray-500 text-sm">None</span>
-            )}
+        <div className={`rounded-lg p-3 ${subCardStyle}`}>
+          <div className="mb-2 flex items-center gap-2">
+            <span className="font-medium text-sm w-12">White: </span>
+            <div className="flex flex-wrap gap-1">
+              {capturedPieces.white.length > 0 ? (
+                capturedPieces.white.map((piece, index) => {
+                  const PieceParam = getPieceComponent(piece, 'white');
+                  return PieceParam ? <div key={index} className="w-6 h-6"><PieceParam side="white" /></div> : null
+                })
+              ) : (
+                <span className="text-gray-400 text-xs italic">None</span>
+              )}
+            </div>
           </div>
-          <div>
-            <span className="font-medium text-sm">Black captured: </span>
-            {capturedPieces.black.length > 0 ? (
-              <span className="text-2xl">
-                {capturedPieces.black.map((piece, index) => (
-                  <span key={index}>{getPieceSymbol(piece)}</span>
-                ))}
-              </span>
-            ) : (
-              <span className="text-gray-500 text-sm">None</span>
-            )}
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-sm w-12">Black: </span>
+            <div className="flex flex-wrap gap-1">
+              {capturedPieces.black.length > 0 ? (
+                capturedPieces.black.map((piece, index) => {
+                  const PieceParam = getPieceComponent(piece, 'black');
+                  return PieceParam ? <div key={index} className="w-6 h-6"><PieceParam side="black" /></div> : null
+                })
+              ) : (
+                <span className="text-gray-400 text-xs italic">None</span>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="mb-4">
         <div className="text-lg font-semibold mb-2">Move History:</div>
-        <div className="bg-gray-50 rounded p-3 max-h-64 overflow-y-auto">
+        <div className={`rounded-lg p-3 max-h-64 overflow-y-auto ${subCardStyle}`}>
           {moveHistory.length === 0 ? (
-            <div className="text-gray-500 italic">No moves yet</div>
+            <div className="text-gray-400 italic text-center text-sm">No moves yet</div>
           ) : (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
               {moveHistory.map((move, index) => (
-                <div key={index} className="text-sm">
-                  <span className="font-mono">
-                    {Math.floor(index / 2) + 1}
-                    {index % 2 === 0 ? "." : "..."} {move}
+                <div key={index} className="text-sm flex">
+                  <span className="w-6 text-gray-400 text-xs">{Math.floor(index / 2) + 1}.</span>
+                  <span className={`font-mono ${index % 2 === 0 ? "text-blue-400" : "text-amber-600"}`}>
+                    {move}
                   </span>
                 </div>
               ))}
@@ -146,7 +145,7 @@ export default function GameInfo({ game, moveHistory, currentPlayer }: GameInfoP
         </div>
       </div>
 
-      <div className="text-sm text-gray-600">
+      <div className="flex justify-between text-xs text-gray-400 mt-4 px-2">
         <div>Moves: {Math.floor(moveHistory.length / 2) + (moveHistory.length % 2)}</div>
         <div>Turn: {game.turn() === "w" ? "White" : "Black"}</div>
       </div>
