@@ -203,8 +203,8 @@ Contributions are welcome! Here's how you can help:
 - [ ] **Online Multiplayer** - Real-time games with other players
 - [ ] **Time Controls** - Chess clocks and timed games
 - [ ] **Game Analysis** - Move evaluation and suggestions
-- [ ] **Custom Themes** - Multiple board and piece themes
-- [ ] **Sound Effects** - Audio feedback for moves and captures
+- [x] **Custom Themes** - Multiple board and piece themes
+- [x] **Sound Effects** - Audio feedback for moves and captures
 - [ ] **Move Animations** - Smooth piece movement animations
 - [ ] **Game Database** - Save and load games
 - [ ] **Opening Book** - Opening move suggestions
