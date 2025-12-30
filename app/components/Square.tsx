@@ -54,7 +54,9 @@ export default function Square({ square, piece, isLight, isSelected, isPossibleM
     >
       {PieceComponent && (
         <div className={`w-[85%] h-[85%] transition-transform duration-200 ${isPossibleMove && piece ? "scale-110" : ""}`}>
-          <PieceComponent side={piece === piece.toUpperCase() ? 'white' : 'black'} className="w-full h-full drop-shadow-lg" />
+          {piece && (
+            <PieceComponent side={piece === piece.toUpperCase() ? 'white' : 'black'} className="w-full h-full drop-shadow-lg" />
+          )}
         </div>
       )}
 
