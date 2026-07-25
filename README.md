@@ -1,8 +1,9 @@
+
 # Chess Master ♔
 
 A modern, feature-rich chess game built with Next.js 15, React, TypeScript, and Tailwind CSS. Play chess with a beautiful interface, complete game validation, move history, and captured pieces tracking.
 
-![Chess Master Screenshot](https://placeholder.svg?height=400&width=800)
+<img width="1919" height="938" alt="chess" src="https://github.com/user-attachments/assets/d350e3d0-dcd5-4aff-b9f8-304b8d85b5fd" />
 
 ## ✨ Features
 
